@@ -31,3 +31,22 @@ type UpdateSubmissionReq struct {
 	StartDate   string `json:"start_date,omitempty"`
 	EndDate     string `json:"end_date,omitempty"`
 }
+
+type SubscriptionFilter struct {
+	UserID      *uuid.UUID
+	ServiceName string
+	Limit       int
+	Offset      int
+}
+
+type CostFilter struct {
+	UserID      *uuid.UUID
+	ServiceName string
+	StartDate   time.Time
+	EndDate     time.Time
+}
+
+type TotalCostResponse struct {
+	TotalCost int    `json:"total_cost"`
+	Currency  string `json:"currency"`
+}
