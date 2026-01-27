@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"em_tz/internal/config"
+	"em_tz_anvar/internal/config"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
