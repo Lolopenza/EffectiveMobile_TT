@@ -33,7 +33,6 @@ REST API сервис для агрегации данных об онлайн �
 ├── config.yaml              # Конфигурационный файл
 ├── docker-compose.yml
 ├── Dockerfile
-└── Makefile
 ```
 
 ## Быстрый старт
@@ -162,16 +161,3 @@ http://localhost:8080/swagger/index.html
 make swag
 ```
 
-## Makefile команды
-
-```bash
-make build        # Сборка приложения
-make run          # Локальный запуск
-make test         # Запуск тестов
-make docker-up    # Запуск в Docker
-make docker-down  # Остановка Docker
-make migrate-up   # Применение миграций
-make migrate-down # Откат миграций
-make swag         # Генерация Swagger
-make lint         # Запуск линтера
-```
