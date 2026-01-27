@@ -18,8 +18,8 @@ import (
 // @Tags subscriptions
 // @Accept json
 // @Produce json
-// @Param input body model.CreateSubscriptionRequest true "Данные подписки"
-// @Success 201 {object} model.Subscription
+// @Param input body models.CreateSubscriptionReq true "Данные подписки"
+// @Success 201 {object} models.Subscription
 // @Failure 400 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
 // @Router /subscriptions [post]
@@ -47,7 +47,7 @@ func (h *Handler) CreateSubscription(c *gin.Context) {
 // @Tags subscriptions
 // @Produce json
 // @Param id path string true "ID подписки (UUID)"
-// @Success 200 {object} model.Subscription
+// @Success 200 {object} models.Subscription
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Router /subscriptions/{id} [get]
@@ -82,7 +82,7 @@ func (h *Handler) GetSubscription(c *gin.Context) {
 // @Param service_name query string false "Название сервиса"
 // @Param limit query int false "Лимит записей" default(20)
 // @Param offset query int false "Смещение" default(0)
-// @Success 200 {array} model.Subscription
+// @Success 200 {array} models.Subscription
 // @Failure 400 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
 // @Router /subscriptions [get]
@@ -136,8 +136,8 @@ func (h *Handler) GetAllSubscriptions(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path string true "ID подписки (UUID)"
-// @Param input body model.UpdateSubscriptionRequest true "Данные для обновления"
-// @Success 200 {object} model.Subscription
+// @Param input body models.UpdateSubscriptionReq true "Данные для обновления"
+// @Success 200 {object} models.Subscription
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
@@ -212,7 +212,7 @@ func (h *Handler) DeleteSubscription(c *gin.Context) {
 // @Param service_name query string false "Название сервиса"
 // @Param start_date query string true "Начало периода (MM-YYYY)"
 // @Param end_date query string true "Конец периода (MM-YYYY)"
-// @Success 200 {object} model.TotalCostResponse
+// @Success 200 {object} models.TotalCostResponse
 // @Failure 400 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
 // @Router /subscriptions/cost [get]
