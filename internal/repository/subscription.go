@@ -171,6 +171,71 @@ func (r *subscriptionRepository) Update(ctx context.Context, subscription *model
 	return nil
 }
 
+// UpdateAtomically выполняет атомарное обновление подписки в транзакции с SELECT FOR UPDATE
+func (r *subscriptionRepository) UpdateAtomically(ctx context.Context, id uuid.UUID, updateFn func(*models.Subscription) error) (*models.Subscription, error) {
+	tx, err := r.db.BeginTxx(ctx, nil)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to begin transaction")
+		return nil, fmt.Errorf("failed to begin transaction: %w", err)
+	}
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		}
+	}()
+
+	// SELECT FOR UPDATE блокирует строку до завершения транзакции
+	query := `
+		SELECT id, service_name, price, user_id, start_date, end_date, created_at, updated_at
+		FROM subscriptions
+		WHERE id = $1
+		FOR UPDATE
+	`
+
+	var subscription models.Subscription
+	err = tx.GetContext(ctx, &subscription, query, id)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrNotFound
+		}
+		log.Error().Err(err).Str("subscription_id", id.String()).Msg("Failed to get subscription for update")
+		return nil, fmt.Errorf("failed to get subscription: %w", err)
+	}
+
+	//Функция обновления
+	if err = updateFn(&subscription); err != nil {
+		return nil, err
+	}
+
+	// Обновляем запись
+	updateQuery := `
+		UPDATE subscriptions
+		SET service_name = $1, price = $2, start_date = $3, end_date = $4, updated_at = $5
+		WHERE id = $6
+	`
+
+	_, err = tx.ExecContext(ctx, updateQuery,
+		subscription.ServiceName,
+		subscription.Price,
+		subscription.StartDate,
+		subscription.EndDate,
+		subscription.UpdatedAt,
+		subscription.ID,
+	)
+	if err != nil {
+		log.Error().Err(err).Str("subscription_id", id.String()).Msg("Failed to update subscription in transaction")
+		return nil, fmt.Errorf("failed to update subscription: %w", err)
+	}
+
+	if err = tx.Commit(); err != nil {
+		log.Error().Err(err).Msg("Failed to commit transaction")
+		return nil, fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
+	log.Debug().Str("subscription_id", id.String()).Msg("Subscription updated atomically")
+	return &subscription, nil
+}
+
 // Delete
 func (r *subscriptionRepository) Delete(ctx context.Context, id uuid.UUID) error {
 	query := `DELETE FROM subscriptions WHERE id = $1`

@@ -50,6 +50,7 @@ func (h *Handler) CreateSubscription(c *gin.Context) {
 // @Success 200 {object} models.Subscription
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
 // @Router /subscriptions/{id} [get]
 func (h *Handler) GetSubscription(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))

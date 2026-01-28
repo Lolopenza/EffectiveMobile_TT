@@ -14,6 +14,8 @@ type SubscriptionRepository interface {
 	GetByID(ctx context.Context, id uuid.UUID) (*models.Subscription, error)
 	GetAll(ctx context.Context, filter *models.SubscriptionFilter) ([]models.Subscription, error)
 	Update(ctx context.Context, subscription *models.Subscription) error
+	// UpdateAtomically выполняет атомарное обновление подписки с SELECT FOR UPDATE
+	UpdateAtomically(ctx context.Context, id uuid.UUID, updateFn func(*models.Subscription) error) (*models.Subscription, error)
 	Delete(ctx context.Context, id uuid.UUID) error
 	GetTotalCost(ctx context.Context, filter *models.CostFilter) (int, error)
 }

@@ -101,7 +101,7 @@ make migrate-up
 ### Создание подписки
 
 ```bash
-curl -X POST http://localhost:8080/api/v1/subscriptions \
+curl -X POST http://localhost:9090/api/v1/subscriptions \
   -H "Content-Type: application/json" \
   -d '{
     "service_name": "Yandex Plus",
@@ -115,19 +115,19 @@ curl -X POST http://localhost:8080/api/v1/subscriptions \
 
 ```bash
 # Все подписки
-curl http://localhost:8080/api/v1/subscriptions
+curl http://localhost:9090/api/v1/subscriptions
 
 # С фильтрацией по пользователю
-curl "http://localhost:8080/api/v1/subscriptions?user_id=60601fee-2bf1-4721-ae6f-7636e79a0cba"
+curl "http://localhost:9090/api/v1/subscriptions?user_id=60601fee-2bf1-4721-ae6f-7636e79a0cba"
 
 # С пагинацией
-curl "http://localhost:8080/api/v1/subscriptions?limit=10&offset=0"
+curl "http://localhost:9090/api/v1/subscriptions?limit=10&offset=0"
 ```
 
 ### Расчет стоимости за период
 
 ```bash
-curl "http://localhost:8080/api/v1/subscriptions/cost?start_date=01-2025&end_date=12-2025&user_id=60601fee-2bf1-4721-ae6f-7636e79a0cba"
+curl "http://localhost:9090/api/v1/subscriptions/cost?start_date=01-2025&end_date=12-2025&user_id=60601fee-2bf1-4721-ae6f-7636e79a0cba"
 ```
 
 ## Конфигурация
@@ -142,14 +142,14 @@ curl "http://localhost:8080/api/v1/subscriptions/cost?start_date=01-2025&end_dat
 | `DB_PASSWORD` | Пароль БД | postgres |
 | `DB_NAME` | Имя базы данных | subscriptions |
 | `DB_SSLMODE` | SSL режим | disable |
-| `SERVER_PORT` | Порт сервера | 8080 |
+| `SERVER_PORT` | Порт сервера | 9090 |
 | `LOG_LEVEL` | Уровень логирования | info |
 
 ## Swagger документация
 
 После запуска сервиса документация доступна по адресу:
 ```
-http://localhost:8080/swagger/index.html
+http://localhost:9090/swagger/index.html
 ```
 
 Для генерации документации:

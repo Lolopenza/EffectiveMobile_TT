@@ -84,42 +84,41 @@ func (s *subscriptionService) GetAll(ctx context.Context, filter *models.Subscri
 	return s.repo.GetAll(ctx, filter)
 }
 
-// Update
+// Update выполняет атомарное обновление подписки
 func (s *subscriptionService) Update(ctx context.Context, id uuid.UUID, req *models.UpdateSubscriptionReq) (*models.Subscription, error) {
 	log.Info().Str("subscription_id", id.String()).Msg("Updating subscription")
 
-	subscription, err := s.repo.GetByID(ctx, id)
+	// Используем атомарное обновление с SELECT FOR UPDATE
+	subscription, err := s.repo.UpdateAtomically(ctx, id, func(sub *models.Subscription) error {
+		if req.ServiceName != "" {
+			sub.ServiceName = req.ServiceName
+		}
+
+		if req.Price > 0 {
+			sub.Price = req.Price
+		}
+
+		if req.StartDate != "" {
+			startDate, err := parseMonthYear(req.StartDate)
+			if err != nil {
+				return fmt.Errorf("invalid start_date format: %w", err)
+			}
+			sub.StartDate = startDate
+		}
+
+		if req.EndDate != "" {
+			endDate, err := parseMonthYear(req.EndDate)
+			if err != nil {
+				return fmt.Errorf("invalid end_date format: %w", err)
+			}
+			sub.EndDate = &endDate
+		}
+
+		sub.UpdatedAt = time.Now()
+		return nil
+	})
+
 	if err != nil {
-		return nil, err
-	}
-
-	if req.ServiceName != "" {
-		subscription.ServiceName = req.ServiceName
-	}
-
-	if req.Price > 0 {
-		subscription.Price = req.Price
-	}
-
-	if req.StartDate != "" {
-		startDate, err := parseMonthYear(req.StartDate)
-		if err != nil {
-			return nil, fmt.Errorf("invalid start_date format: %w", err)
-		}
-		subscription.StartDate = startDate
-	}
-
-	if req.EndDate != "" {
-		endDate, err := parseMonthYear(req.EndDate)
-		if err != nil {
-			return nil, fmt.Errorf("invalid end_date format: %w", err)
-		}
-		subscription.EndDate = &endDate
-	}
-
-	subscription.UpdatedAt = time.Now()
-
-	if err := s.repo.Update(ctx, subscription); err != nil {
 		return nil, err
 	}
 

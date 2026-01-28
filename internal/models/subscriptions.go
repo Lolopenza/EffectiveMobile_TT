@@ -18,16 +18,16 @@ type Subscription struct {
 }
 
 type CreateSubscriptionReq struct {
-	ServiceName string `json:"service_name" validate:"required"`
-	Price       int    `json:"price" validate:"required,min=1"`
-	UserID      string `json:"user_id" validate:"required,uuid"`
-	StartDate   string `json:"start_date" validate:"required"`
+	ServiceName string `json:"service_name" binding:"required"`
+	Price       int    `json:"price" binding:"required,min=1"`
+	UserID      string `json:"user_id" binding:"required,uuid"`
+	StartDate   string `json:"start_date" binding:"required"`
 	EndDate     string `json:"end_date,omitempty"`
 }
 
 type UpdateSubscriptionReq struct {
 	ServiceName string `json:"service_name,omitempty"`
-	Price       int    `json:"price,omitempty" validate:"omitempty,min=1"`
+	Price       int    `json:"price,omitempty" binding:"omitempty,min=1"`
 	StartDate   string `json:"start_date,omitempty"`
 	EndDate     string `json:"end_date,omitempty"`
 }
