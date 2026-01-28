@@ -71,10 +71,6 @@ docker run -d --name postgres \
 make migrate-up
 ```
 
-3. Запустите сервис:
-```bash
-make run
-```
 
 ## API Endpoints
 
