@@ -145,6 +145,27 @@ curl "http://localhost:9090/api/v1/subscriptions/cost?start_date=01-2025&end_dat
 | `SERVER_PORT` | Порт сервера | 9090 |
 | `LOG_LEVEL` | Уровень логирования | info |
 
+## Тестирование
+
+### Unit-тесты
+
+```bash
+go test ./internal/repository/... ./internal/service/... ./internal/handler/... -v -count=1
+```
+
+- **repository** — тесты с sqlmock (без реальной БД)
+- **service** — тесты с mock-репозиторием
+- **handler** — тесты с mock-сервисом и httptest
+
+### Integration-тесты
+
+Интеграционные тесты поднимают PostgreSQL в Docker (testcontainers) и проверяют полный сценарий CRUD и эндпоинтов.
+
+```bash
+# Требуется запущенный Docker
+go test -tags=integration ./internal/integration/... -v -count=1
+```
+
 ## Swagger документация
 
 После запуска сервиса документация доступна по адресу:
